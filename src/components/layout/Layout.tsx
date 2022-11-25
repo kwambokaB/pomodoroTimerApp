@@ -6,7 +6,7 @@ import SectionContainer from '@/components/SectionContainer';
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SectionContainer>
-      <div className='flex h-screen flex-col justify-between'>
+      <div className='flex flex-col justify-between'>
         <Header />
         {children}
       </div>
