@@ -1,6 +1,15 @@
 import * as React from 'react';
 
+import Header from '@/components/layout/Header';
+import SectionContainer from '@/components/SectionContainer';
+
 export default function Layout({ children }: { children: React.ReactNode }) {
-  // Put Header or Footer Here
-  return <>{children}</>;
+  return (
+    <SectionContainer>
+      <div className='flex h-screen flex-col justify-between'>
+        <Header />
+        {children}
+      </div>
+    </SectionContainer>
+  );
 }

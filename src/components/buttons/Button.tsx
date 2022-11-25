@@ -9,6 +9,7 @@ enum ButtonVariant {
   'ghost',
   'light',
   'dark',
+  'light-transparent',
 }
 
 type ButtonProps = {
@@ -55,15 +56,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               'text-primary-500',
               'border border-primary-500',
               'hover:bg-primary-50 active:bg-primary-100 disabled:bg-primary-100',
-              isDarkBg &&
-                'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
+              isDarkBg && 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'ghost' && [
               'text-primary-500',
               'shadow-none',
               'hover:bg-primary-50 active:bg-primary-100 disabled:bg-primary-100',
-              isDarkBg &&
-                'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
+              isDarkBg && 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'light' && [
               'bg-white text-dark ',
@@ -71,13 +70,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               'hover:bg-gray-100 hover:text-dark',
               'active:bg-white/80 disabled:bg-gray-200',
             ],
+            variant === 'light-transparent' && [
+              'text-white, bg-white/50',
+              'hover:text-dark',
+              'active:bg-white/50 disabled:bg-gray-200',
+            ],
             variant === 'dark' && [
               'bg-gray-900 text-white',
               'border border-gray-600',
               'hover:bg-gray-800 active:bg-gray-700 disabled:bg-gray-700',
             ],
           ],
-          //#endregion  //*======== Variants ===========
           'disabled:cursor-not-allowed',
           isLoading &&
             'relative text-transparent transition-none hover:text-transparent disabled:cursor-wait',
@@ -87,14 +90,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && (
           <div
-            className={clsxm(
-              'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-              {
-                'text-white': ['primary', 'dark'].includes(variant),
-                'text-black': ['light'].includes(variant),
-                'text-primary-500': ['outline', 'ghost'].includes(variant),
-              }
-            )}
+            className={clsxm('absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2', {
+              'text-white': ['primary', 'dark'].includes(variant),
+              'text-black': ['light'].includes(variant),
+              'text-primary-500': ['outline', 'ghost'].includes(variant),
+            })}
           >
             <ImSpinner2 className='animate-spin' />
           </div>
