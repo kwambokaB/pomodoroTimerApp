@@ -3,15 +3,17 @@ import { AiFillCheckCircle } from 'react-icons/ai';
 import { FiMoreVertical } from 'react-icons/fi';
 import { IoMdAddCircle, IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 
+import Button from '@/components/buttons/Button';
+import { entry } from '@/components/interfaces';
+
 import { useTaskContext } from '@/context/tasks';
 
 const TaskList = () => {
-  const { AddTask, removeTask, clearTasks, task } = useTaskContext();
+  const { AddTask, task, changeTaskStatus, updateCurrentTask, currentTask } = useTaskContext();
 
   const [title, setTittle] = useState('test');
   const [pCount, setPCount] = useState(1);
   const [showAddCard, setShowAddCard] = useState(false);
-  const [showEditCard, setShoeEditCard] = useState(false);
   const [taskList, setTaskList] = useState(task);
 
   const handleSave = () => {
@@ -19,40 +21,89 @@ const TaskList = () => {
       {
         title,
         pomodoros: pCount,
+        status: 'active',
       },
     ];
     AddTask(newTask);
     setShowAddCard(false);
   };
 
-  const handleDelete = (tsk) => {
-    console.log('delete');
-    removeTask(tsk);
-    setShowAddCard(false);
-  };
-
-  const handleClear = () => {
-    clearTasks();
+  const handleChangeStatus = (task: entry, state: string) => {
+    changeTaskStatus(task, state);
   };
 
   useEffect(() => {
-    console.log('dfg', task);
-  }, []);
+    setTaskList(task);
+  }, [task]);
 
   const TaskItem = ({ item }) => {
-    return (
-      <div className=' mb-2 flex w-full flex-row justify-between rounded-[7px] bg-white px-2 py-4'>
-        <div className='flex flex-row items-center px-2'>
-          <AiFillCheckCircle
-            style={{ paddingRight: '10px', color: 'slategray', fontSize: '35px' }}
-          />
-          {item[0].title}
+    if (currentTask === item[0]) {
+      return (
+        <div
+          className=' mb-2 flex w-full flex-row items-center justify-between rounded-[7px] border-l-8 border-slate-500 bg-white px-2 py-4'
+          onClick={() => updateCurrentTask(item[0])}
+        >
+          <div className='flex flex-row items-center px-2'>
+            {item[0].status === 'active' ? (
+              <Button variant='ghost' onClick={() => handleChangeStatus(item, 'completed')}>
+                <AiFillCheckCircle
+                  style={{ paddingRight: '10px', color: 'red', fontSize: '35px' }}
+                />
+              </Button>
+            ) : (
+              <Button variant='ghost' onClick={() => handleChangeStatus(item, 'active')}>
+                <AiFillCheckCircle
+                  style={{ paddingRight: '10px', color: 'green', fontSize: '35px' }}
+                />
+              </Button>
+            )}
+
+            {item[0].status === 'active' ? (
+              <div>{item[0].title}</div>
+            ) : (
+              <div className='text-gray-400 line-through'>{item[0].title}</div>
+            )}
+          </div>
+          <div className='flex flex-row items-center px-2'>
+            <div className='text-gray-400'>{item[0].pomodoros} poms</div>
+            <FiMoreVertical color='gray' size={30} />
+          </div>
         </div>
-        <div>
-          <FiMoreVertical color='gray' size={30} />
+      );
+    } else {
+      return (
+        <div
+          className=' mb-2 flex w-full flex-row items-center justify-between rounded-[7px] bg-white px-2 py-4'
+          onClick={() => updateCurrentTask(item[0])}
+        >
+          <div className='flex flex-row items-center px-2'>
+            {item[0].status === 'active' ? (
+              <Button variant='ghost' onClick={() => handleChangeStatus(item, 'completed')}>
+                <AiFillCheckCircle
+                  style={{ paddingRight: '10px', color: 'red', fontSize: '35px' }}
+                />
+              </Button>
+            ) : (
+              <Button variant='ghost' onClick={() => handleChangeStatus(item, 'active')}>
+                <AiFillCheckCircle
+                  style={{ paddingRight: '10px', color: 'green', fontSize: '35px' }}
+                />
+              </Button>
+            )}
+
+            {item[0].status === 'active' ? (
+              <div>{item[0].title}</div>
+            ) : (
+              <div className='text-gray-400 line-through'>{item[0].title}</div>
+            )}
+          </div>
+          <div className='flex flex-row items-center px-2'>
+            <div className='text-gray-400'>{item[0].pomodoros} poms</div>
+            <FiMoreVertical color='gray' size={30} />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   };
 
   const AddTaskButton = () => {
@@ -96,7 +147,7 @@ const TaskList = () => {
           </button>
         </div>
         <div className='mt-5 flex w-full flex-row items-center justify-between rounded-[7px] bg-slate-200 py-5 px-4'>
-          <div className='font-semibold text-slate-700/70' onClick={handleDelete}>
+          <div className='font-semibold text-slate-700/70' onClick={() => setShowAddCard(false)}>
             Delete
           </div>
           <div>
@@ -120,8 +171,8 @@ const TaskList = () => {
 
   return (
     <div className='flex w-full flex-col items-center justify-between py-3'>
-      {task?.map((t) => (
-        <TaskItem item={t} />
+      {taskList?.map((t: entry) => (
+        <TaskItem item={t} key={`${t.title} ${t.pomodoros}`} />
       ))}
 
       {showAddCard ? TaskModal() : <AddTaskButton />}
