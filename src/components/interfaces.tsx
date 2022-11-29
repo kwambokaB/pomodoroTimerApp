@@ -5,3 +5,9 @@ export interface entry {
 }
 
 export type Task = entry[];
+
+export interface Mode {
+  name: string;
+  time: number;
+  theme: string;
+}

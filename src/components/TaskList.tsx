@@ -34,7 +34,7 @@ const TaskList = () => {
 
   useEffect(() => {
     setTaskList(task);
-  }, [task]);
+  }, [task, changeTaskStatus]);
 
   const TaskItem = ({ item }) => {
     if (currentTask === item[0]) {
